@@ -1,1 +1,232 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registration Form</title>
+  <style>
+    :root{
+      --max-width:900px;
+      --accent:#2563eb;
+      --muted:#6b7280;
+      --bg:#f8fafc;
+      --card:#ffffff;
+      --radius:10px;
+      --gap:14px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    }
+    body{background:var(--bg); margin:24px; display:flex; justify-content:center;}
+    .container{width:100%; max-width:var(--max-width);}  
+    header{text-align:center; margin-bottom:14px;}
+    .card{background:var(--card); padding:20px; border-radius:var(--radius); box-shadow:0 6px 18px rgba(0,0,0,0.06);} 
+    form{display:grid; gap:var(--gap);}  
+    .row{display:flex; gap:12px;}
+    .col{flex:1;}
+    label{display:block; font-size:13px; color:var(--muted); margin-bottom:6px;}
+    input, select, textarea{
+      width:100%; padding:10px 12px; border:1px solid #d9dde4; border-radius:8px; font-size:15px; box-sizing:border-box;
+    }
+    textarea{min-height:80px; resize:vertical;}
+    fieldset{border:1px dashed #e3e9f3; padding:12px; border-radius:8px;}
+    legend{color:var(--accent); padding:0 8px;}
+    .actions{display:flex; justify-content:flex-end; gap:10px; margin-top:10px;}
+    button{padding:10px 14px; border:none; border-radius:8px; cursor:pointer;}
+    .submit-btn{background:var(--accent); color:white;}
+    .reset-btn{background:#efefef;}
+    .error{color:#e11d48; font-size:13px; margin-top:4px;}
+
+    /* DASHBOARD */
+    #dashboard{
+      display:none;
+      background:var(--card);
+      padding:20px;
+      border-radius:var(--radius);
+      box-shadow:0 6px 18px rgba(0,0,0,0.06);
+      animation: fade .4s ease;
+    }
+    @keyframes fade{from{opacity:0;} to{opacity:1;}}
+    .dash-title{font-size:22px; margin-bottom:10px; color:#111;}
+    .dash-item{margin-bottom:10px; padding:10px; background:#f1f5f9; border-radius:8px;}
+
+    @media(max-width:640px){ .row{flex-direction:column;} }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>Registration Form</h1>
+    <p class="small" style="color:var(--muted)">Fill out all required fields</p>
+  </header>
+
+  <section class="card" id="formSection">
+    <form id="studentForm" novalidate>
+      <fieldset>
+        <legend>Personal Information</legend>
+
+        <div class="row">
+          <div class="col">
+            <label>Last Name</label>
+            <input id="lastName" required />
+            <div class="error"></div>
+          </div>
+          <div class="col">
+            <label>First Name</label>
+            <input id="firstName" required />
+            <div class="error"></div>
+          </div>
+          <div class="col">
+            <label>Middle Name (Optional)</label>
+            <input id="middleName" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>Course</label>
+            <select id="course" required>
+              <option value=""> Select Course </option>
+              <option>BSIT</option>
+              <option>BSCPE</option>
+              <option>BSBA</option>
+              <option>BSEd</option>
+              <option>Other</option>
+            </select>
+            <div class="error"></div>
+          </div>
+          <div class="col">
+            <label>Year</label>
+            <select id="year" required>
+              <option value=""> Select Year </option>
+              <option>1st Year</option>
+              <option>2nd Year</option>
+              <option>3rd Year</option>
+              <option>4th Year</option>
+            </select>
+            <div class="error"></div>
+          </div>
+          <div class="col">
+            <label>Section</label>
+            <select id="section" required>
+              <option value="">Select Section </option>
+              <option>A</option>
+              <option>B</option>
+              <option>C</option>
+              <option>D</option>
+            </select>
+            <div class="error"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <label>Student Number</label>
+            <input id="studentNumber" required />
+            <div class="error"></div>
+          </div>
+          <div class="col">
+            <label>Date of Birth</label>
+            <input type="date" id="dob" required />
+            <div class="error"></div>
+          </div>
+          <div class="col">
+            <label>Gender</label>
+            <select id="gender" required>
+              <option value="">Select Gender </option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+            <div class="error"></div>
+          </div>
+        </div>
+
+        <label>Complete Address</label>
+        <textarea id="address" required></textarea>
+        <div class="error"></div>
+
+        <div class="row">
+          <div class="col">
+            <label>Contact Number</label>
+            <input id="contact" required />
+            <div class="error"></div>
+          </div>
+          <div class="col">
+            <label>Email</label>
+            <input type="email" id="email" required />
+            <div class="error"></div>
+          </div>
+        </div>
+
+      </fieldset>
+
+      <div class="actions">
+        <button class="reset-btn" type="reset">Reset</button>
+        <button class="submit-btn" type="submit">Submit</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- DASHBOARD AFTER SUBMIT -->
+  <section id="dashboard">
+    <h2 class="dash-title">Submission Dashboard</h2>
+    <div id="dashContent"></div>
+  </section>
+</div>
+
+<script>
+  const form = document.getElementById('studentForm');
+  const dashboard = document.getElementById('dashboard');
+  const dashContent = document.getElementById('dashContent');
+  const formSection = document.getElementById('formSection');
+
+  function showError(input, message){
+    const err = input.parentElement.querySelector('.error');
+    if(err) err.textContent = message;
+  }
+  function clearErrors(){
+    document.querySelectorAll('.error').forEach(e => e.textContent = "");
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    clearErrors();
+
+    let valid = true;
+
+    const fields = [
+      'lastName','firstName','course','year','section','studentNumber','dob',
+      'gender','address','contact','email'
+    ];
+
+    fields.forEach(id => {
+      const input = document.getElementById(id);
+      if(!input.value.trim()){
+        valid = false;
+        showError(input, "This field is required.");
+      }
+    });
+
+    if(!valid) return;
+
+    // Fill dashboard
+    dashContent.innerHTML = `
+      <div class='dash-item'><strong>Name:</strong> ${lastName.value}, ${firstName.value} ${middleName.value}</div>
+      <div class='dash-item'><strong>Course:</strong> ${course.value}</div>
+      <div class='dash-item'><strong>Year & Section:</strong> ${year.value} - ${section.value}</div>
+      <div class='dash-item'><strong>Student Number:</strong> ${studentNumber.value}</div>
+      <div class='dash-item'><strong>Birthday:</strong> ${dob.value}</div>
+      <div class='dash-item'><strong>Gender:</strong> ${gender.value}</div>
+      <div class='dash-item'><strong>Address:</strong> ${address.value}</div>
+      <div class='dash-item'><strong>Contact:</strong> ${contact.value}</div>
+      <div class='dash-item'><strong>Email:</strong> ${email.value}</div>
+    `;
+
+    // Hide form, show dashboard
+    formSection.style.display = "none";
+    dashboard.style.display = "block";
+  });
+</script>
+
+</body>
+  </html>
